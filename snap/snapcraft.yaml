@@ -1,0 +1,13 @@
+name: dashkiosk-image-config
+version: '0.1'
+summary: Basic configuration for a dashkiosk appliance server
+description: |
+  This snap carries basic configuration for a dashkiosk based appliance
+  server image.
+
+grade: stable
+confinement: strict
+
+parts:
+  config:
+    plugin: nil
