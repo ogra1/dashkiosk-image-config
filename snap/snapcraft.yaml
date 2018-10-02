@@ -7,7 +7,30 @@ description: |
 
 grade: stable
 confinement: strict
+apps:
+  setup:
+    command: setup.sh
+    daemon: simple
+    plugs:
+      - network
+      - network-bind
+      - network-control
+      - network-setup-control
+      - timezone-control
+
+hooks:
+  configure:
+    plugs:
+      - hostname-control
+      - avahi-observe
+      - avahi-control
 
 parts:
   config:
     plugin: nil
+    override-build: |
+      mkdir -p $SNAPCRAFT_PART_INSTALL/bin
+      cp -av setup.sh $SNAPCRAFT_PART_INSTALL/bin/
+    stage-packages:
+      - netcat-openbsd
+      - avahi-utils
