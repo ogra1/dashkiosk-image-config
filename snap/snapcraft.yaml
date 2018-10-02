@@ -9,7 +9,7 @@ grade: stable
 confinement: strict
 apps:
   setup:
-    command: setup.sh
+    command: bin/setup.sh
     daemon: simple
     plugs:
       - network
