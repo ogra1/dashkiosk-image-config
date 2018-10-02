@@ -32,7 +32,7 @@ while true; do {
     </body>
 </html>
 EOF
-    } | nc -l $PORT | grep GET | sed 's/^GET \/?//;s/ HTTP.*$//'
+    } | nc -l 127.0.0.1 $PORT | grep GET | sed 's/^GET \/?//;s/ HTTP.*$//'
     done
 } 
 done
