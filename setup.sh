@@ -2,14 +2,16 @@
 
 PORT=8081
 
-while ! touch /etc/netplan/00-snapd-config.yaml 2>/dev/null; do
-	echo "setup: interface not connected, sleeping 30 for sec"
+while ! avahi-set-host-name dashkiosk 2>/dev/null; do
+	echo "setup: avahi-control interface not connected, sleeping 30 for sec"
 	sleep 30
 done
 
 if grep -q localhost.localdomain /etc/hostname; then
-    /usr/bin/hostnamectl set-hostname dashkiosk
-    avahi-set-host-name dashkiosk
+    while ! /usr/bin/hostnamectl set-hostname dashkiosk 2>/dev/null; do
+		echo "setup: waiting for hostname-control interface, sleeping 10 sec"
+		sleep 10
+    done
 fi
 
 if grep -q wlan0 /proc/net/dev; then
