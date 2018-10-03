@@ -1,6 +1,0 @@
-#! /bin/sh -e
-
-if grep -q localhost.localdomain /etc/hostname; then
-    /usr/bin/hostnamectl set-hostname dashkiosk
-	avahi-set-host-name dashkiosk
-fi

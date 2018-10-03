@@ -2,17 +2,28 @@
 
 PORT=8081
 
-ifconfig wlan0 up
+while ! touch /etc/netplan/00-snapd-config.yaml 2>/dev/null; do
+	echo "setup: interface not connected, sleeping 30 for sec"
+	sleep 30
+done
 
-while true; do {
-    SELECT=""
-    LIST="$(iw dev wlan0 scan|grep SSID|sed 's/^.*: //')"
-    for ITEM in $LIST; do
-        SELECT="$SELECT\n<option vakue=\"$ITEM\">$ITEM</option>"
-    done
+if grep -q localhost.localdomain /etc/hostname; then
+    /usr/bin/hostnamectl set-hostname dashkiosk
+    avahi-set-host-name dashkiosk
+fi
+
+if grep -q wlan0 /proc/net/dev; then
+    ifconfig wlan0 up
+
     while true; do {
-        echo -e 'HTTP/1.1 200 OK\r\n'
-        cat << EOF
+        SELECT=""
+        LIST="$(iw dev wlan0 scan|grep SSID|sed 's/^.*: //')"
+        for ITEM in $LIST; do
+            SELECT="$SELECT\n<option vakue=\"$ITEM\">$ITEM</option>"
+        done
+        while true; do {
+            echo -e 'HTTP/1.1 200 OK\r\n'
+            cat << EOF
 <html>
     <head>
         <title>Network Config</title>
@@ -32,8 +43,8 @@ while true; do {
     </body>
 </html>
 EOF
-    } | nc -l 127.0.0.1 $PORT | grep GET | sed 's/^GET \/?//;s/ HTTP.*$//'
+        } | nc -l 127.0.0.1 $PORT | grep GET | sed 's/^GET \/?//;s/ HTTP.*$//'
+        done
+    }
     done
-} 
-done
-
+fi
