@@ -1,0 +1,13 @@
+#! /bin/sh
+
+set -e
+
+# query geoip databae on boot and set the timezone accordingly
+MYTZ="$(wget -q -O- http://geoip.nekudo.com/api/|grep time_zone|sed -s 's/^.*time_zone":"//;s/".*$//;s/\\//')"
+
+while ! timedatectl set-timezone "$MYTZ"; do
+    echo "timezone control interface not connected yet, please run:"
+    echo "snap connect $SNAP_NAME:timezone-control"
+    echo "sleeping for 10 sec"
+    sleep 10
+done

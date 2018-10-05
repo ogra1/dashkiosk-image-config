@@ -25,7 +25,7 @@ fi
 #        SELECT=""
 #        LIST="$(iw dev wlan0 scan|grep SSID|sed 's/^.*: //')"
 #        for ITEM in $LIST; do
-#            SELECT="$SELECT\n<option vakue=\"$ITEM\">$ITEM</option>"
+#            SELECT="$SELECT\n<option value=\"$ITEM\">$ITEM</option>"
 #        done
 #        while true; do {
 #            echo -e 'HTTP/1.1 200 OK\r\n'

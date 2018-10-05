@@ -7,6 +7,7 @@ description: |
 
 grade: stable
 confinement: strict
+
 apps:
   setup:
     command: bin/setup.sh
@@ -16,10 +17,16 @@ apps:
       - network-bind
       - network-control
       - network-setup-control
-      - timezone-control
       - hostname-control
       - avahi-observe
       - avahi-control
+  set-timezone:
+    command: bin/set-timezone
+    daemon: simple
+    plugs:
+      - network
+      - network-bind
+      - timezone-control
 
 parts:
   config:
@@ -27,6 +34,8 @@ parts:
     override-build: |
       mkdir -p $SNAPCRAFT_PART_INSTALL/bin
       cp -av setup.sh $SNAPCRAFT_PART_INSTALL/bin/
+      cp -av set-timezone $SNAPCRAFT_PART_INSTALL/bin/
     stage-packages:
       - netcat-openbsd
       - avahi-utils
+      - wget
