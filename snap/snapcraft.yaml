@@ -9,33 +9,42 @@ grade: stable
 confinement: strict
 
 apps:
-  setup:
-    command: bin/setup.sh
-    daemon: simple
+  set-name:
+    command: bin/set-name
+    daemon: oneshot
     plugs:
-      - network
-      - network-bind
-      - network-control
-      - network-setup-control
       - hostname-control
       - avahi-observe
       - avahi-control
   set-timezone:
     command: bin/set-timezone
-    daemon: simple
+    daemon: oneshot
     plugs:
       - network
       - network-bind
       - timezone-control
+  netplan-import:
+    command: bin/netplan-import
+    daemon: simple
+    plugs:
+      - system-observe
+      - hardware-observe
+      - mount-observe
+      - network-setup-control
+      - removable-media
+      - shutdown
+      - udisks2
 
 parts:
   config:
     plugin: nil
     override-build: |
       mkdir -p $SNAPCRAFT_PART_INSTALL/bin
-      cp -av setup.sh $SNAPCRAFT_PART_INSTALL/bin/
+      cp -av set-name $SNAPCRAFT_PART_INSTALL/bin/
       cp -av set-timezone $SNAPCRAFT_PART_INSTALL/bin/
+      cp -av netplan-import $SNAPCRAFT_PART_INSTALL/bin/
     stage-packages:
       - netcat-openbsd
       - avahi-utils
+      - udisks2
       - wget
